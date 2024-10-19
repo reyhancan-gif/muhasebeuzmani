@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhasebe Oyunu</title>
+</head>
+<body>
+    <h1>Muhasebe Oyunu: Bilançodaki Hataları Bulun</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Aktifler</th>
+                <th>Pasifler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Nakit: 30,000 TL</td>
+                <td>Borçlar: 50,000 TL</td>
+            </tr>
+            <tr>
+                <td>Alacaklar: 20,000 TL</td>
+                <td>Öz Sermaye: 70,000 TL</td>
+            </tr>
+            <tr>
+                <td>Stoklar: 50,000 TL</td>
+                <td><input type="text" id="pasif-duzeltme" placeholder="Eksik Kalem"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button onclick="kontrolEt()">Düzelt</button>
+    <p id="sonuc"></p>
+
+    <script>
+        function kontrolEt() {
+            var pasifDuzeltme = document.getElementById("pasif-duzeltme").value;
+            var sonuc = document.getElementById("sonuc");
+            
+            if (pasifDuzeltme === "Eksik Borç: 20,000 TL") {
+                sonuc.innerHTML = "Tebrikler! Hatalı eksik borcu buldunuz.";
+                document.getElementById("pasif-duzeltme").className = "correct";
+            } else {
+                sonuc.innerHTML = "Yanlış düzeltme! Tekrar deneyin.";
+                document.getElementById("pasif-duzeltme").className = "highlight";
+            }
+        }
+    </script>
+</body>
+</html>
