@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muhasebe Oyunu</title>
+    <title>Muhasebe Oyunu - Adım 1 ve Adım 2</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 50%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: center; border: 1px solid #ccc; }
+        .highlight { background-color: #f2dede; }
+        .correct { background-color: #dff0d8; }
+        .center { text-align: center; margin: 20px; }
+        #adim2 { display: none; } /* İkinci oyun başlangıçta gizli */
+    </style>
 </head>
 <body>
-    <h1>Muhasebe Oyunu: Bilançodaki Hataları Bulun</h1>
-    <table>
+    <h1 class="center">Muhasebe Oyunu - Adım 1: Bilançodaki Hataları Bulun</h1>
+    <table id="adim1-tablo">
         <thead>
             <tr>
                 <th>Aktifler</th>
@@ -24,25 +33,139 @@
                 <td>Öz Sermaye: 70,000 TL</td>
             </tr>
             <tr>
-                <td>Stoklar: 50,000 TL</td>
-                <td><input type="text" id="pasif-duzeltme" placeholder="Eksik Kalem"></td>
+                <td><input type="text" id="aktif-duzeltme" placeholder="Eksik Aktif Kalemi"></td>
+                <td>Toplam Pasifler: 120,000 TL</td>
             </tr>
         </tbody>
     </table>
-    <button onclick="kontrolEt()">Düzelt</button>
-    <p id="sonuc"></p>
+    <div class="center">
+        <button onclick="kontrolEtAdim1()">Adım 1'i Düzelt</button>
+        <p id="sonuc1"></p>
+        <p id="rozet1"></p>
+    </div>
+
+    <!-- Adım 2 (Gizli Başlangıçta) -->
+    <div id="adim2">
+        <h1 class="center">Muhasebe Oyunu - Adım 2: Vergi Hesaplama</h1>
+        <p class="center">**Not:** Vergi oranı %20 olarak belirlenmiştir. Lütfen buna göre hesaplayın.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Gelir-Gider Tablosu</th>
+                    <th>Tutar (TL)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Satış Geliri</td>
+                    <td>100,000 TL</td>
+                </tr>
+                <tr>
+                    <td>Satışların Maliyeti</td>
+                    <td>-40,000 TL</td>
+                </tr>
+                <tr>
+                    <td>Brüt Kar</td>
+                    <td>60,000 TL</td>
+                </tr>
+                <tr>
+                    <td>Faaliyet Giderleri</td>
+                    <td>-10,000 TL</td>
+                </tr>
+                <tr>
+                    <td><strong>Dönem Karı</strong></td>
+                    <td>50,000 TL</td>
+                </tr>
+                <tr>
+                    <td>Vergi (%20)</td>
+                    <td><input type="text" id="vergi-duzeltme" placeholder="Vergiyi Girin"></td>
+                </tr>
+                <tr>
+                    <td><strong>Net Kar</strong></td>
+                    <td><input type="text" id="net-kar-duzeltme" placeholder="Net Karı Girin"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="center">
+            <button onclick="kontrolEtAdim2()">Adım 2'yi Düzelt</button>
+            <p id="sonuc2"></p>
+            <p id="rozet2"></p>
+        </div>
+    </div>
 
     <script>
-        function kontrolEt() {
-            var pasifDuzeltme = document.getElementById("pasif-duzeltme").value;
-            var sonuc = document.getElementById("sonuc");
-            
-            if (pasifDuzeltme === "Eksik Borç: 20,000 TL") {
-                sonuc.innerHTML = "Tebrikler! Hatalı eksik borcu buldunuz.";
-                document.getElementById("pasif-duzeltme").className = "correct";
+        var hataSayisi1 = 0;
+        var rozet1 = "Altın Rozet";
+
+        function kontrolEtAdim1() {
+            var aktifDuzeltme = document.getElementById("aktif-duzeltme").value;
+            var sonuc1 = document.getElementById("sonuc1");
+            var rozetGoster1 = document.getElementById("rozet1");
+
+            // Nokta ve virgülleri kaldırarak cevabı sadeleştirme
+            var duzeltilmisCevap = aktifDuzeltme.replace(/[.,\s]/g, '');  // Nokta, virgül ve boşlukları kaldır
+            var dogruCevap = "70000";  // Doğru cevap 70000
+
+            if (duzeltilmisCevap === dogruCevap) {
+                sonuc1.innerHTML = "Tebrikler! Eksik varlığı doğru tespit ettiniz.";
+                document.getElementById("aktif-duzeltme").className = "correct";
+                rozetGoster1.innerHTML = "Aldığınız rozet: " + rozet1;
+
+                // Adım 2'yi göster ve Adım 1'i gizle
+                document.getElementById("adim1-tablo").style.display = "none";
+                document.getElementById("adim2").style.display = "block";
             } else {
-                sonuc.innerHTML = "Yanlış düzeltme! Tekrar deneyin.";
-                document.getElementById("pasif-duzeltme").className = "highlight";
+                sonuc1.innerHTML = "Yanlış düzeltme! Tekrar deneyin.";
+                document.getElementById("aktif-duzeltme").className = "highlight";
+                hataSayisi1++;
+
+                if (hataSayisi1 === 1) {
+                    rozet1 = "Gümüş Rozet";
+                } else if (hataSayisi1 === 2) {
+                    rozet1 = "Bronz Rozet";
+                } else {
+                    rozet1 = "Teselli Rozeti";
+                }
+
+                rozetGoster1.innerHTML = "Şu anki rozet: " + rozet1;
+            }
+        }
+
+        var hataSayisi2 = 0;
+        var rozet2 = "Altın Rozet";
+
+        function kontrolEtAdim2() {
+            var vergiDuzeltme = document.getElementById("vergi-duzeltme").value;
+            var netKarDuzeltme = document.getElementById("net-kar-duzeltme").value;
+            var sonuc2 = document.getElementById("sonuc2");
+            var rozetGoster2 = document.getElementById("rozet2");
+
+            // Nokta ve virgülleri kaldırarak cevabı sadeleştirme
+            var duzeltilmisVergi = vergiDuzeltme.replace(/[.,\s]/g, '');  // Nokta, virgül ve boşlukları kaldır
+            var duzeltilmisNetKar = netKarDuzeltme.replace(/[.,\s]/g, '');  // Nokta, virgül ve boşlukları kaldır
+            var dogruVergi = "10000";  // Doğru cevap 10000 (vergiyi kaldırdıktan sonra)
+            var dogruNetKar = "40000";  // Doğru cevap 40000 (net karı kaldırdıktan sonra)
+
+            if (duzeltilmisVergi === dogruVergi && duzeltilmisNetKar === dogruNetKar) {
+                sonuc2.innerHTML = "Tebrikler! Vergi ve net kar hesaplamasını doğru yaptınız.";
+                document.getElementById("vergi-duzeltme").className = "correct";
+                document.getElementById("net-kar-duzeltme").className = "correct";
+                rozetGoster2.innerHTML = "Aldığınız rozet: " + rozet2;
+            } else {
+                sonuc2.innerHTML = "Yanlış düzeltme! Tekrar deneyin.";
+                document.getElementById("vergi-duzeltme").className = "highlight";
+                document.getElementById("net-kar-duzeltme").className = "highlight";
+                hataSayisi2++;
+
+                if (hataSayisi2 === 1) {
+                    rozet2 = "Gümüş Rozet";
+                } else if (hataSayisi2 === 2) {
+                    rozet2 = "Bronz Rozet";
+                } else {
+                    rozet2 = "Teselli Rozeti";
+                }
+
+                rozetGoster2.innerHTML = "Şu anki rozet: " + rozet2;
             }
         }
     </script>
